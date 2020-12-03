@@ -1,0 +1,8 @@
+service_id: phh2o
+coverage_id: phh2o_0-5cm_mean
+crs: urn:ogc:def:crs:EPSG::152160
+west: -1784000
+south: 1356000
+east: -1140000
+north: 1863000
+output: test.tif

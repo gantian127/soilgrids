@@ -1,0 +1,19 @@
+name: soilgrids
+channels:
+  - conda-forge
+dependencies:
+  - bmipy
+  - click
+  - netcdf4
+  - numpy
+  - pyyaml
+  - requests
+  - xarray
+  - matplotlib
+  - rasterio
+  - pip
+  - pip:
+    - owslib
+
+
+

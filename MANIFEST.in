@@ -1,0 +1,2 @@
+include versioneer.py
+include soilgrids/_version.py
