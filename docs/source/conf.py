@@ -20,6 +20,7 @@
 project = 'soilgrids'
 copyright = '2020, Tian'
 author = 'Tian'
+master_doc = 'index'
 
 
 # -- General configuration ---------------------------------------------------
