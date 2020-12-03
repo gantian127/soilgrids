@@ -160,7 +160,7 @@ Parameter settings
 .. links:
 
 .. |binder| image:: https://mybinder.org/badge_logo.svg
- :target: https://mybinder.org/v2/gh/gantian127/soilgrids/main?filepath=notebooks%2Fsoilgrids.ipynb
+ :target: https://mybinder.org/v2/gh/gantian127/soilgrids/master?filepath=notebooks%2Fsoilgrids.ipynb
 
 .. |tif_plot| image:: _static/tif_plot.png
 
