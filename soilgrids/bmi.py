@@ -25,7 +25,7 @@ class BmiSoilGrids(Bmi):
         loop. This typically includes deallocating memory, closing files and
         printing reports.
         """
-        raise NotImplementedError("finalize")
+        self._time_index = 0.0
 
     def get_component_name(self) -> str:
         """Name of the component.
@@ -36,7 +36,7 @@ class BmiSoilGrids(Bmi):
         """
         return "SoilGrids"
 
-    def get_current_time(self) -> float: #TODO
+    def get_current_time(self) -> float:
         """Current time of the model.
         Returns
         -------
@@ -52,7 +52,7 @@ class BmiSoilGrids(Bmi):
         float
             The maximum model time.
         """
-        return 9999.0  #TODO: check
+        return 9999.0
 
     def get_grid_face_edges(self, grid: int, face_edges: numpy.ndarray) -> numpy.ndarray:
         """Get the face-edge connectivity.
@@ -224,7 +224,7 @@ class BmiSoilGrids(Bmi):
             Size of the grid.
         """
 
-        return numpy.prod(self._grid[grid].shape)
+        return int(numpy.prod(self._grid[grid].shape))
 
     def get_grid_spacing(self, grid: int, spacing: numpy.ndarray) -> numpy.ndarray:
         """Get distance between nodes of the computational grid.
@@ -358,7 +358,7 @@ class BmiSoilGrids(Bmi):
         float
             The model start time.
         """
-        return 0.0  #TODO:check
+        return 0.0
 
     def get_time_step(self) -> float:
         """Current time step of the model.
@@ -368,7 +368,7 @@ class BmiSoilGrids(Bmi):
         float
             The time step used in model.
         """
-        return 1.0  # TODO: check
+        return 1.0
 
     def get_time_units(self) -> str:
         """Time units of the model.
@@ -380,7 +380,7 @@ class BmiSoilGrids(Bmi):
         -----
         CSDMS uses the UDUNITS standard from Unidata.
         """
-        return 'none'  #TODO: check
+        return 'none'
 
     def get_value(self, name: str, dest: numpy.ndarray) -> numpy.ndarray:
         """Get a copy of values of the given variable.
