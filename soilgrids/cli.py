@@ -8,13 +8,13 @@ from soilgrids import SoilGrids
 @click.command()
 @click.version_option(version=__version__)
 @click.option(
-    "--ser_id",
+    "--service_id",
     required=True,
     help="Map service identifier for a map service. "
          "See details at https://www.isric.org/explore/soilgrids/faq-soilgrids",
 )
 @click.option(
-    "--cov_id",
+    "--coverage_id",
     required=True,
     help="Map coverage identifier supported by a map service.",
 )
@@ -33,9 +33,9 @@ from soilgrids import SoilGrids
     'output',
     type=click.Path(exists=False)
 )
-def main(ser_id, cov_id, crs, bbox, output):
+def main(service_id, coverage_id, crs, bbox, output):
     west, south, east, north = list(map(float, bbox.split(',')))
-    SoilGrids().get_coverage_data(service_id=ser_id, coverage_id=cov_id, crs=crs,
+    SoilGrids().get_coverage_data(service_id=service_id, coverage_id=coverage_id, crs=crs,
                                   west=west, south=south, east=east, north=north, output=output)
     if os.path.isfile(output):
         print('Done')
