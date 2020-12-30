@@ -116,7 +116,8 @@ class SoilGrids:
 
         return None
 
-    def get_coverage_data(self, service_id, coverage_id, crs, west, south, east, north, output):
+    def get_coverage_data(self, service_id, coverage_id, crs, west, south, east, north, output,
+                          resx=250, resy=250, width=None, height=None, response_crs=None):
 
         wcs, coverage_list = self._get_service_and_coverage_list(service_id)
         coverage_obj = self._get_coverage_obj(wcs, coverage_list, coverage_id)
@@ -124,7 +125,22 @@ class SoilGrids:
         # check crs
         crs_list = [CRS.getcodeurn() for CRS in coverage_obj.supportedCRS]
         if crs not in crs_list:
-            raise ValueError('Please provide a coordinate system (crs) code from the following options: \n{}'.
+            raise ValueError('Please provide a coordinate system code from the following options for crs: \n{}'.
+                             format('\n'.join(crs_list)))
+        if '4326' in crs:
+            if width and height:
+                resx = resy = None
+            else:
+                raise ValueError('Please provide width and height values when the coordinate system (crs) '
+                                 'is EPSG 4326.')
+        else:
+            width = height = None
+
+        # check response_crs
+        if response_crs is None:
+            response_crs = crs
+        elif response_crs not in crs_list:
+            raise ValueError('Please provide a coordinate system code from the following options for response_crs: \n{}'.
                              format('\n'.join(crs_list)))
 
         # check bounding box
@@ -142,7 +158,9 @@ class SoilGrids:
             identifier=coverage_id,
             crs=crs,
             bbox=bbox,
-            resx=250, resy=250,
+            resx=resx, resy=resy,
+            width=width, height=height,
+            response_crs=response_crs,
             format='GEOTIFF_INT16')
 
         # store data and metadata
@@ -167,9 +185,9 @@ class SoilGrids:
                 'service_url': SoilGrids.MAP_SERVICES[service_id]['link'],
                 'service_id': service_id,
                 'coverage_id':  coverage_id,
-                'crs': crs,
+                'crs': response_crs,
                 'bounding_box': bbox,
-                'grid_resolution': '250m',
+                'grid_resolution': dataset.res,
             }
 
         else:
