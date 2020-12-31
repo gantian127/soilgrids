@@ -150,12 +150,24 @@ Parameter settings
   multiple coverages. To get a list of the coverage id from a map service, use "get_coverage_list()" method.
   To learn the meaning of the coverage id, please visit the SoilGrids `FAQ page <https://www.isric.org/explore/soilgrids>`_
 
-* **crs**: the coordinate system code of a coverage. To get the crs code list of a coverage, use "get_coverage_info()" method.
+* **crs**: the coordinate system code of a coverage. To get the supported crs code list of a coverage, use "get_coverage_info()" method.
 
 * **west, south, east, north**: The bounding box values for the downloaded data. These values should be based on the
-  coordinate system specified by the "crs" parameter.
+  coordinate system specified by the "crs" parameter. The west and south values are for the point on the lower left corner
+  of the bounding box. The east and north values are for the point on the upper right corner of the bounding box.
 
 * **output**: The file path of the GeoTiff file to store the downloaded data with ".tif" file extension.
+
+* **resx, resy**: The grid resolution for the downloaded data when "crs" parameter is set as a projection coordinate system
+  (e.g., epsg 152160). The value for resx and resy is set as 250 (m) by default, which is the same grid resolution
+  as the soil datasets in the SoilGrids system.
+
+* **width, height**: The width and height in pixels for the downloaded data when "crs" parameter is set as a geographic
+  coordinate system (e.g., epsg 4326).
+
+* **response_crs**: the coordinate system code for the GeoTiff file of the downloaded data. If response_crs is not
+  specified by the user, its value will be the same as the crs value.
+
 
 .. links:
 
