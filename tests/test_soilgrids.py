@@ -85,3 +85,11 @@ def test_data_download(tmpdir):
 
     assert isinstance(data2, xarray.core.dataarray.DataArray)
     assert len(os.listdir(tmpdir)) == 2
+
+    data3 = SoilGrids().get_coverage_data('phh2o', 'phh2o_0-5cm_mean', crs='urn:ogc:def:crs:EPSG::4326',
+                                          west=-105.38, south=39.45, east=-104.5, north=40.07,
+                                          response_crs='urn:ogc:def:crs:EPSG::152160',
+                                          width=316, height=275, output=os.path.join(tmpdir, 'test3.tif'))
+
+    assert isinstance(data3, xarray.core.dataarray.DataArray)
+    assert len(os.listdir(tmpdir)) == 3

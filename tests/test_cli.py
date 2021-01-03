@@ -107,3 +107,13 @@ def test_data_download(tmpdir):
                                       'test2.tif'])
         assert result.exit_code == 0
         assert len(os.listdir(tmpdir)) == 2
+
+    with tmpdir.as_cwd():
+        result = runner.invoke(main, ['--service_id=phh2o', '--coverage_id=phh2o_0-5cm_mean',
+                                      '--crs=urn:ogc:def:crs:EPSG::4326',
+                                      '--bbox=-105.38, 39.45, -104.5, 40.07',
+                                      '--width=316', '--height=275',
+                                      '--response_crs=urn:ogc:def:crs:EPSG::152160',
+                                      'test3.tif'])
+        assert result.exit_code == 0
+        assert len(os.listdir(tmpdir)) == 3
