@@ -56,6 +56,19 @@ def test_output():
                                       west=-1784000, south=1356000, east=-1140000, north=1863000, output='wrong file')
 
 
+def test_width_height():
+    with pytest.raises(ValueError):
+        SoilGrids().get_coverage_data('phh2o', 'phh2o_0-5cm_mean', crs='urn:ogc:def:crs:EPSG::4326',
+                                      west=-105.38, south=39.45, east=-104.5, north=40.07, output='test.tif')
+
+
+def test_response_crs():
+    with pytest.raises(ValueError):
+        SoilGrids().get_coverage_data('phh2o', 'phh2o_0-5cm_mean', crs='urn:ogc:def:crs:EPSG::4326',
+                                      west=-1784000, south=1356000, east=-1140000, north=1863000,
+                                      response_crs='error', output='test.tif')
+
+
 # test data download for get_coverage_data()
 @pytest.mark.filterwarnings("ignore:numpy.ufunc size")
 def test_data_download(tmpdir):
@@ -65,3 +78,10 @@ def test_data_download(tmpdir):
 
     assert isinstance(data, xarray.core.dataarray.DataArray)
     assert len(os.listdir(tmpdir)) == 1
+
+    data2 = SoilGrids().get_coverage_data('phh2o', 'phh2o_0-5cm_mean', crs='urn:ogc:def:crs:EPSG::4326',
+                                          west=-105.38, south=39.45, east=-104.5, north=40.07,
+                                          width=316, height=275, output=os.path.join(tmpdir, 'test2.tif'))
+
+    assert isinstance(data2, xarray.core.dataarray.DataArray)
+    assert len(os.listdir(tmpdir)) == 2
