@@ -582,7 +582,7 @@ class BmiSoilGrids(Bmi):
         self._grid = {
             0: BmiGridUniformRectilinear(
                 shape=[int(dim) for dim in array.shape],
-                yx_spacing=self._dataset.attrs['res'],
+                yx_spacing=(self._dataset.attrs['res'][1], self._dataset.attrs['res'][0]),  # original res is (x,y)
                 yx_of_lower_left=(
                     self._dataset.coords['y'].values[-1],
                     self._dataset.coords['x'].values[0]),
