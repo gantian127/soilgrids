@@ -19,6 +19,12 @@ BmiGridUniformRectilinear = namedtuple(
 
 
 class BmiSoilGrids(Bmi):
+    def __init__(self) -> None:
+        self._input_var_names = ()
+        self._input_var_names = ()
+        self._var = {}
+        self._grid = {}
+
     def finalize(self) -> None:
         """Perform tear-down tasks for the model.
         Perform all tasks that take place after exiting the model's time
@@ -589,7 +595,6 @@ class BmiSoilGrids(Bmi):
                 ),
         }
 
-        self._var = {}
         self._var[self._output_var_names[0]] = BmiVar(
             dtype=str(array.dtype),
             itemsize=array.itemsize,
