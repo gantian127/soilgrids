@@ -19,6 +19,12 @@ BmiGridUniformRectilinear = namedtuple(
 
 
 class BmiSoilGrids(Bmi):
+    def __init__(self) -> None:
+        self._input_var_names = ()
+        self._output_var_names = ()
+        self._var = {}
+        self._grid = {}
+
     def finalize(self) -> None:
         """Perform tear-down tasks for the model.
         Perform all tasks that take place after exiting the model's time
@@ -181,6 +187,7 @@ class BmiSoilGrids(Bmi):
             lower-left corner.
         """
         origin[:] = self._grid[grid].yx_of_lower_left
+        return origin
 
     def get_grid_rank(self, grid: int) -> int:
         """Get number of dimensions of the computational grid.
@@ -399,7 +406,8 @@ class BmiSoilGrids(Bmi):
             The same numpy array that was passed as an input buffer.
         """
         # return all the value at current time step, for scalar it is just one value
-        dest[:] = self._dataset[0].values
+        dest[:] = self._dataset[0].values.reshape(-1).copy()
+        return dest
 
     def get_value_at_indices(
         self, name: str, dest: numpy.ndarray, inds: numpy.ndarray
@@ -420,6 +428,7 @@ class BmiSoilGrids(Bmi):
         """
         # return the value at current time step with given index in 1D or 2D grid. when it is scalar no need for ind
         dest[:] = self._dataset[0].values.reshape(-1)[inds]
+        return dest
 
     def get_value_ptr(self, name: str) -> numpy.ndarray:
         """Get a reference to values of the given variable.
@@ -452,7 +461,7 @@ class BmiSoilGrids(Bmi):
         # for scalar there is no grid, identifier will be 0.
         # this function starts to check other grid property methods
         # when there is no grid, the only grid property will be get_grid_type() as None.
-        return 0
+        return self._var[name].grid
 
     def get_var_itemsize(self, name: str) -> int:
         """Get memory use for each array element in bytes.
@@ -574,7 +583,6 @@ class BmiSoilGrids(Bmi):
         self._dataset = soilgrids.get_coverage_data(**conf)
 
         self._output_var_names = tuple([soilgrids.metadata['variable_name']])
-        self._input_var_names = ()
 
         self._time_index = 0.0
 
@@ -589,14 +597,13 @@ class BmiSoilGrids(Bmi):
                 ),
         }
 
-        self._var = {}
         self._var[self._output_var_names[0]] = BmiVar(
             dtype=str(array.dtype),
             itemsize=array.itemsize,
             nbytes=array.nbytes,  # nbytes for current time step value
             units=soilgrids.metadata["variable_units"],  # TODO: translate var name into CSDMS standard name
             location="node",  # scalar value has no location on a grid (node, face, edge)
-            grid=0,  # there is no grid, grid is none
+            grid=0,  # grid id number
         )
 
     def set_value(self, name: str, values: numpy.ndarray) -> None:

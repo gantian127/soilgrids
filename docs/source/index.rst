@@ -71,7 +71,6 @@ You can launch binder to test and run the code below. |binder|
 **Example 2**: use BmiSoilGrids class to download data (Demonstration of how to use BMI).
 
 .. code-block:: python
-
     import matplotlib.pyplot as plt
     import numpy as np
 
@@ -94,6 +93,8 @@ You can launch binder to test and run the code below. |binder|
     # get variable grid info
     grid_rank = data_comp.get_grid_rank(var_grid)
 
+    grid_size = data_comp.get_grid_size(var_grid)
+
     grid_shape = np.empty(grid_rank, int)
     data_comp.get_grid_shape(var_grid, grid_shape)
 
@@ -103,12 +104,13 @@ You can launch binder to test and run the code below. |binder|
     grid_origin = np.empty(grid_rank)
     data_comp.get_grid_origin(var_grid, grid_origin)
 
-    print('grid_rank: {} \ngrid_shape: {} \ngrid_spacing: {} \ngrid_origin: {}'.format(
-        grid_rank, grid_shape, grid_spacing, grid_origin))
+    print('grid_rank: {} \ngrid_size: {} \ngrid_shape: {} \ngrid_spacing: {} \ngrid_origin: {}'.format(
+        grid_rank, grid_size, grid_shape, grid_spacing, grid_origin))
 
     # get variable data
-    data = np.empty(grid_shape, var_type)
+    data = np.empty(grid_size, var_type)
     data_comp.get_value(var_name, data)
+    data_2D = data.reshape(grid_shape)
 
     # get X, Y extent for plot
     min_y, min_x = grid_origin
@@ -120,7 +122,7 @@ You can launch binder to test and run the code below. |binder|
 
     # plot data
     fig, ax = plt.subplots(1,1, figsize=(9,5))
-    im = ax.imshow(data, extent=extent)
+    im = ax.imshow(data_2D, extent=extent)
     fig.colorbar(im)
     plt.xlabel('X')
     plt.ylabel('Y')
