@@ -82,6 +82,8 @@ print('variable_name: {} \nvar_unit: {} \nvar_location: {} \nvar_type: {} \nvar_
 # get variable grid info 
 grid_rank = data_comp.get_grid_rank(var_grid) 
 
+grid_size = data_comp.get_grid_size(var_grid)
+
 grid_shape = np.empty(grid_rank, int)
 data_comp.get_grid_shape(var_grid, grid_shape)
 
@@ -91,12 +93,13 @@ data_comp.get_grid_spacing(var_grid, grid_spacing)
 grid_origin = np.empty(grid_rank)
 data_comp.get_grid_origin(var_grid, grid_origin)
 
-print('grid_rank: {} \ngrid_shape: {} \ngrid_spacing: {} \ngrid_origin: {}'.format(
-    grid_rank, grid_shape, grid_spacing, grid_origin))
+print('grid_rank: {} \ngrid_size: {} \ngrid_shape: {} \ngrid_spacing: {} \ngrid_origin: {}'.format(
+    grid_rank, grid_size, grid_shape, grid_spacing, grid_origin))
 
 # get variable data 
-data = np.empty(grid_shape, var_type)
+data = np.empty(grid_size, var_type)
 data_comp.get_value(var_name, data)
+data_2D = data.reshape(grid_shape)
 
 # get X, Y extent for plot
 min_y, min_x = grid_origin
@@ -108,7 +111,7 @@ extent = [min_x - dx, max_x + dx, min_y - dy, max_y + dy]
 
 # plot data
 fig, ax = plt.subplots(1,1, figsize=(9,5))
-im = ax.imshow(data, extent=extent)
+im = ax.imshow(data_2D, extent=extent)
 fig.colorbar(im)
 plt.xlabel('X')
 plt.ylabel('Y')
