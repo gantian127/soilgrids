@@ -58,7 +58,7 @@ class BmiSoilGrids(Bmi):
         float
             The maximum model time.
         """
-        return 9999.0
+        return 0.0
 
     def get_grid_face_edges(self, grid: int, face_edges: numpy.ndarray) -> numpy.ndarray:
         """Get the face-edge connectivity.
@@ -387,7 +387,7 @@ class BmiSoilGrids(Bmi):
         -----
         CSDMS uses the UDUNITS standard from Unidata.
         """
-        return 'none'
+        return '1'
 
     def get_value(self, name: str, dest: numpy.ndarray) -> numpy.ndarray:
         """Get a copy of values of the given variable.
@@ -644,7 +644,7 @@ class BmiSoilGrids(Bmi):
         then they can be computed by the :func:`initialize` method and this
         method can return with no action.
         """
-        self._time_index += 1.0
+        raise NotImplementedError("update")
 
     def update_until(self, time: float) -> None:
         """Advance model state until the given time.
