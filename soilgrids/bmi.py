@@ -31,7 +31,12 @@ class BmiSoilGrids(Bmi):
         loop. This typically includes deallocating memory, closing files and
         printing reports.
         """
-        self._time_index = 0.0
+        self._var = {}
+        self._grid = {}
+        self._input_var_names = ()
+        self._output_var_names = ()
+        self._dataset = None
+
 
     def get_component_name(self) -> str:
         """Name of the component.
@@ -49,7 +54,7 @@ class BmiSoilGrids(Bmi):
         float
             The current model time.
         """
-        return self._time_index
+        return 0.0
 
     def get_end_time(self) -> float:
         """End time of the model.
@@ -200,7 +205,7 @@ class BmiSoilGrids(Bmi):
         int
             Rank of the grid.
         """
-        return 2
+        return len(self._grid[grid].shape)
 
     def get_grid_shape(self, grid: int, shape: numpy.ndarray) -> numpy.ndarray:
         """Get dimensions of the computational grid.
@@ -276,7 +281,8 @@ class BmiSoilGrids(Bmi):
         ndarray of float
             The input numpy array that holds the grid's column x-coordinates.
         """
-        raise NotImplementedError("get_grid_x")
+        x[:] = self._dataset.x.values
+        return x
 
     def get_grid_y(self, grid: int, y: numpy.ndarray) -> numpy.ndarray:
         """Get coordinates of grid nodes in the y direction.
@@ -291,7 +297,8 @@ class BmiSoilGrids(Bmi):
         ndarray of float
             The input numpy array that holds the grid's row y-coordinates.
         """
-        raise NotImplementedError("get_grid_y")
+        y[:] = self._dataset.y.values
+        return y
 
     def get_grid_z(self, grid: int, z: numpy.ndarray) -> numpy.ndarray:
         """Get coordinates of grid nodes in the z direction.
@@ -334,7 +341,7 @@ class BmiSoilGrids(Bmi):
         int
           The number of input variables.
         """
-        return 0
+        return len(self._input_var_names)
 
     def get_output_var_names(self) -> Tuple[str]:
         """List of a model's output variables.
@@ -355,7 +362,7 @@ class BmiSoilGrids(Bmi):
         int
           The number of output variables.
         """
-        return 1
+        return len(self._output_var_names)
 
     def get_start_time(self) -> float:
         """Start time of the model.
@@ -375,7 +382,7 @@ class BmiSoilGrids(Bmi):
         float
             The time step used in model.
         """
-        return 1.0
+        return 0.0
 
     def get_time_units(self) -> str:
         """Time units of the model.
@@ -387,7 +394,7 @@ class BmiSoilGrids(Bmi):
         -----
         CSDMS uses the UDUNITS standard from Unidata.
         """
-        return '1'
+        return "1"
 
     def get_value(self, name: str, dest: numpy.ndarray) -> numpy.ndarray:
         """Get a copy of values of the given variable.
@@ -406,7 +413,7 @@ class BmiSoilGrids(Bmi):
             The same numpy array that was passed as an input buffer.
         """
         # return all the value at current time step, for scalar it is just one value
-        dest[:] = self._dataset[0].values.reshape(-1).copy()
+        dest[:] = self.get_value_ptr(name).reshape(-1).copy()
         return dest
 
     def get_value_at_indices(
@@ -427,7 +434,7 @@ class BmiSoilGrids(Bmi):
             Value of the model variable at the given location.
         """
         # return the value at current time step with given index in 1D or 2D grid. when it is scalar no need for ind
-        dest[:] = self._dataset[0].values.reshape(-1)[inds]
+        dest[:] = self.get_value_ptr(name).reshape(-1)[inds]
         return dest
 
     def get_value_ptr(self, name: str) -> numpy.ndarray:
@@ -575,16 +582,21 @@ class BmiSoilGrids(Bmi):
         """
         if config_file:
             with open(config_file, "r") as fp:
-                conf = yaml.safe_load(fp)
+                conf = yaml.safe_load(fp).get('bmi-soilgrids', {})
         else:
-            conf = {}
+            conf = {'service_id': 'phh2o',
+                    'coverage_id': 'phh2o_0-5cm_mean',
+                    'crs': 'urn:ogc:def:crs:EPSG::152160',
+                    'west': -1784000,
+                    'south': 1356000,
+                    'east': -1140000,
+                    'north': 1863000,
+                    'output': 'test.tif'}
 
         soilgrids = SoilGrids()
         self._dataset = soilgrids.get_coverage_data(**conf)
 
         self._output_var_names = tuple([soilgrids.metadata['variable_name']])
-
-        self._time_index = 0.0
 
         array = self._dataset[0].values
         self._grid = {
