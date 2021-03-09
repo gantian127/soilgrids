@@ -1,10 +1,11 @@
-service_id: phh2o
-coverage_id: phh2o_0-5cm_mean
-crs: urn:ogc:def:crs:EPSG::4326
-west: -105.38
-south: 39.45
-east: -104.5
-north: 40.07
-width: 316
-height: 275
-output: test.tif
+bmi-soilgrids:
+  service_id: phh2o
+  coverage_id: phh2o_0-5cm_mean
+  crs: urn:ogc:def:crs:EPSG::4326
+  west: -105.38
+  south: 39.45
+  east: -104.5
+  north: 40.07
+  width: 316
+  height: 275
+  output: test2.tif
