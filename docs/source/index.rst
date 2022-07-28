@@ -160,12 +160,16 @@ Parameter settings
 
 * **output**: The file path of the GeoTiff file to store the downloaded data with ".tif" file extension.
 
-* **resx, resy**: The grid resolution for the downloaded data when "crs" parameter is set as a projection coordinate system
-  (e.g., epsg 152160). The value for resx and resy is set as 250 (m) if not specified by the user.
-  This is the same grid resolution as the soil datasets in the SoilGrids system.
+* **resx, resy**: The grid resolution for the downloaded data when "crs" parameter is set as a
+  projection coordinate system(e.g., epsg 152160). The default value for resx and resy is set as 250 (m) if not
+  specified by the user. This is the same grid resolution as the soil datasets in the SoilGrids system.
+  The resx and resy parameters are required when the "crs" parameter is set as a projection coordinate system
+  and the width and height values are note needed.
 
-* **width, height**: The width and height in pixels for the downloaded data when "crs" parameter is set as a geographic
-  coordinate system (e.g., epsg 4326).
+* **width, height**: The width and height of the raster for the downloaded data when "crs" parameter is set as a
+  geographic coordinate system(e.g., epsg 4326 for WGS84). The height represents the number of rows and the width
+  represents the number of columns for the raster grid of the downloaded data. The width and height parameters
+  are required when the "crs" is set as a geographic coordinate system and resx and resy values are not needed.
 
 * **response_crs**: the coordinate system code for the GeoTiff file of the downloaded data. If response_crs is not
   specified by the user, its value will be the same as the crs value.
