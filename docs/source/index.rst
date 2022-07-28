@@ -114,8 +114,8 @@ You can launch binder to test and run the code below. |binder|
 
     # get X, Y extent for plot
     min_y, min_x = grid_origin
-    max_y = min_y + grid_spacing[0]*grid_shape[0]
-    max_x = min_x + grid_spacing[1]*grid_shape[1]
+    max_y = min_y + grid_spacing[0]*(grid_shape[0]-1)
+    max_x = min_x + grid_spacing[1]*(grid_shape[1]-1)
     dy = grid_spacing[0]/2
     dx = grid_spacing[1]/2
     extent = [min_x - dx, max_x + dx, min_y - dy, max_y + dy]
