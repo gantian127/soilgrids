@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-import xarray as xr
+import rioxarray
 from owslib.wcs import WebCoverageService
 
 
@@ -117,7 +117,7 @@ class SoilGrids:
         return None
 
     def get_coverage_data(self, service_id, coverage_id, crs, west, south, east, north, output,
-                          resx=250, resy=250, width=None, height=None, response_crs=None):
+                          resx=250, resy=250, width=None, height=None, response_crs=None, local_file=False):
 
         wcs, coverage_list = self._get_service_and_coverage_list(service_id)
         coverage_obj = self._get_coverage_obj(wcs, coverage_list, coverage_id)
@@ -153,46 +153,55 @@ class SoilGrids:
         if output[-4::] != '.tif':
             raise ValueError('Please provide a valid output file name with .tif extension.')
 
-        # subset coverage data
-        response = wcs.getCoverage(
-            identifier=coverage_id,
-            crs=crs,
-            bbox=bbox,
-            resx=resx, resy=resy,
-            width=width, height=height,
-            response_crs=response_crs,
-            format='GEOTIFF_INT16')
-
-        # store data and metadata
-        if response.info()['Content-Type'] == 'image/tiff':
-            # write data to file
-            try:
-                with open(output, 'wb') as file:
-                    file.write(response.read())
-
-            except Exception as e:
-                print('Failed to save the data as a GeoTiff file.')
-                raise
-
-            # store data and metadata
-            dataset = xr.open_rasterio(output)
-            dataset.close()
-
-            self._tif_file = output if os.path.dirname(output) != '' else os.path.join(os.getcwd(), output)
-            self._metadata = {
-                'variable_name': SoilGrids.MAP_SERVICES[service_id]['name'],
-                'variable_units': SoilGrids.MAP_SERVICES[service_id]['units'],
-                'service_url': SoilGrids.MAP_SERVICES[service_id]['link'],
-                'service_id': service_id,
-                'coverage_id':  coverage_id,
-                'crs': response_crs,
-                'bounding_box': bbox,
-                'grid_resolution': dataset.res,
-            }
-
+        if local_file and os.path.isfile(output):
+            pass
         else:
-            error_info = response.read().decode('utf-8')
-            raise Exception('WCS sever error \n{}'.format(error_info))
+            # subset coverage data
+            response = wcs.getCoverage(
+                identifier=coverage_id,
+                crs=crs,
+                bbox=bbox,
+                resx=resx, resy=resy,
+                width=width, height=height,
+                response_crs=response_crs,
+                format='GEOTIFF_INT16')
+
+            # write data to file
+            if response.info()['Content-Type'] == 'image/tiff':
+                try:
+                    with open(output, 'wb') as file:
+                        file.write(response.read())
+
+                except Exception as e:
+                    print('Failed to save the data as a GeoTiff file.')
+                    raise
+            else:
+                error_info = response.read().decode('utf-8')
+                raise Exception('WCS sever error \n{}'.format(error_info))
+
+        # open data
+        dataset = rioxarray.open_rasterio(output)
+        dataset.close()
+
+        # get resolution
+        if resx and resy:
+            grid_res = [resx, resy]
+        else:
+            geotrans = [float(value) for value in dataset['spatial_ref'].attrs['GeoTransform'].split(' ')]
+            grid_res = [abs(geotrans[1]), abs(geotrans[5])]
+
+        # store metadata
+        self._tif_file = output if os.path.dirname(output) != '' else os.path.join(os.getcwd(), output)
+        self._metadata = {
+            'variable_name': SoilGrids.MAP_SERVICES[service_id]['name'],
+            'variable_units': SoilGrids.MAP_SERVICES[service_id]['units'],
+            'service_url': SoilGrids.MAP_SERVICES[service_id]['link'],
+            'service_id': service_id,
+            'coverage_id':  coverage_id,
+            'crs': response_crs,
+            'bounding_box': bbox,
+            'grid_res': grid_res
+        }
 
         return dataset
 
