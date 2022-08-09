@@ -174,6 +174,11 @@ Parameter settings
 * **response_crs**: the coordinate system code for the GeoTiff file of the downloaded data. If response_crs is not
   specified by the user, its value will be the same as the crs value.
 
+* **local_file**: indicate whether to make it priority to get the data by loading a local file that matches with the
+  output file path. Default value is set as False, which means the function will directly download the data from SoilGrids
+  system. If value is set as True, the function will first try to open a local file that matches with
+  the output file path. And if the local file doesn't exist, it will then download data from SoilGrids.
+
 
 .. links:
 
