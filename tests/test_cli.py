@@ -80,7 +80,18 @@ def test_response_crs():
     result = runner.invoke(main, ['--service_id=phh2o', '--coverage_id=phh2o_0-5cm_mean',
                                   '--crs=urn:ogc:def:crs:EPSG::152160',
                                   '--bbox=-1784000,1356000,-1140000,1863000',
-                                  '--response_crs=error',
+                                  '--local_file=error',
+                                  'test.tif'])
+
+    assert result.exit_code != 0
+
+
+def test_local_file():
+    runner = CliRunner()
+    result = runner.invoke(main, ['--service_id=phh2o', '--coverage_id=phh2o_0-5cm_mean',
+                                  '--crs=urn:ogc:def:crs:EPSG::152160',
+                                  '--bbox=-1784000,1356000,-1140000,1863000',
+                                  '--local_file=error',
                                   'test.tif'])
 
     assert result.exit_code != 0
@@ -117,3 +128,32 @@ def test_data_download(tmpdir):
                                       'test3.tif'])
         assert result.exit_code == 0
         assert len(os.listdir(tmpdir)) == 3
+
+
+@pytest.mark.filterwarnings("ignore:numpy.ufunc size")
+def test_load_localfile(tmpdir):
+    runner = CliRunner()
+    with tmpdir.as_cwd():
+        result = runner.invoke(main, ['--service_id=phh2o', '--coverage_id=phh2o_0-5cm_mean',
+                                      '--crs=urn:ogc:def:crs:EPSG::152160',
+                                      '--bbox=-1784000,1356000,-1140000,1863000',
+                                      '--resx=500', '--resy=500',
+                                      'test.tif'])
+
+        assert result.exit_code == 0
+        assert len(os.listdir(tmpdir)) == 1
+        file1_info = os.path.getmtime('test.tif')
+
+    with tmpdir.as_cwd():
+        result = runner.invoke(main, ['--service_id=phh2o', '--coverage_id=phh2o_0-5cm_mean',
+                                      '--crs=urn:ogc:def:crs:EPSG::152160',
+                                      '--bbox=-1784000,1356000,-1140000,1863000',
+                                      '--resx=500', '--resy=500',
+                                      '--local_file=True',
+                                      'test.tif'])
+
+        assert result.exit_code == 0
+        assert len(os.listdir(tmpdir)) == 1
+        file2_info = os.path.getmtime('test.tif')
+
+    assert file1_info == file2_info
