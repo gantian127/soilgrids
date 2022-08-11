@@ -164,7 +164,7 @@ Parameter settings
   projection coordinate system(e.g., epsg 152160). The default value for resx and resy is set as 250 (m) if not
   specified by the user. This is the same grid resolution as the soil datasets in the SoilGrids system.
   The resx and resy parameters are required when the "crs" parameter is set as a projection coordinate system
-  and the width and height values are note needed.
+  and the width and height values are not needed.
 
 * **width, height**: The width and height of the raster for the downloaded data when "crs" parameter is set as a
   geographic coordinate system(e.g., epsg 4326 for WGS84). The height represents the number of rows and the width
