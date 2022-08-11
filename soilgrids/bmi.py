@@ -452,7 +452,10 @@ class BmiSoilGrids(Bmi):
             A reference to a model variable.
         """
         # return a reference of all the value at current time step. mainly for input data. not useful for scalar value
-        return self._dataset[0].values
+        add_offset = self._dataset.add_offset
+        scale_factor = self._dataset.scale_factor
+
+        return self._dataset[0].values * scale_factor + add_offset
 
     def get_var_grid(self, name: str) -> int:
         """Get grid identifier for the given variable.
@@ -602,7 +605,7 @@ class BmiSoilGrids(Bmi):
         self._grid = {
             0: BmiGridUniformRectilinear(
                 shape=[int(dim) for dim in array.shape],
-                yx_spacing=(self._dataset.attrs['res'][1], self._dataset.attrs['res'][0]),  # original res is (x,y)
+                yx_spacing=(soilgrids.metadata['grid_res'][1], soilgrids.metadata['grid_res'][0]),  # original grid_res is (x,y)
                 yx_of_lower_left=(
                     self._dataset.coords['y'].values[-1],
                     self._dataset.coords['x'].values[0]),

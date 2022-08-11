@@ -57,7 +57,7 @@ from soilgrids import SoilGrids
     required=False,
     default=None,
     type=float,
-    help="height in pixels for data download. Required when crs is set as a geographic coordinate system. ",
+    help="Height in pixels for data download. Required when crs is set as a geographic coordinate system. ",
 )
 @click.option(
     "--response_crs",
@@ -65,14 +65,22 @@ from soilgrids import SoilGrids
     default=None,
     help="Coordinate system code for the GeoTiff file.",
 )
+@click.option(
+    "--local_file",
+    required=False,
+    type=bool,
+    default=False,
+    help="Indicate whether to load existing local file. Default as False.",
+)
 @click.argument(
     'output',
     type=click.Path(exists=False)
 )
-def main(service_id, coverage_id, crs, bbox, resx, resy, width, height, response_crs, output):
+def main(service_id, coverage_id, crs, bbox, resx, resy, width, height, response_crs, local_file, output):
     west, south, east, north = list(map(float, bbox.split(',')))
     SoilGrids().get_coverage_data(service_id=service_id, coverage_id=coverage_id, crs=crs,
                                   west=west, south=south, east=east, north=north, output=output,
-                                  resx=resx, resy=resy, width=width, height=height, response_crs=response_crs)
+                                  resx=resx, resy=resy, width=width, height=height, response_crs=response_crs,
+                                  local_file=local_file)
     if os.path.isfile(output):
         print('Done')

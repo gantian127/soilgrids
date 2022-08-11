@@ -93,3 +93,20 @@ def test_data_download(tmpdir):
 
     assert isinstance(data3, xarray.core.dataarray.DataArray)
     assert len(os.listdir(tmpdir)) == 3
+
+
+# test loading local file for get_coverage_data()
+@pytest.mark.filterwarnings("ignore:numpy.ufunc size")
+def test_load_localfile(tmpdir):
+    SoilGrids().get_coverage_data('phh2o', 'phh2o_0-5cm_mean', crs='urn:ogc:def:crs:EPSG::152160',
+                                  west=-1784000, south=1356000, east=-1140000, north=1863000,
+                                  output=os.path.join(tmpdir, 'test.tif'))
+    file1_info = os.path.getmtime(os.path.join(tmpdir, 'test.tif'))
+    assert len(os.listdir(tmpdir)) == 1
+
+    SoilGrids().get_coverage_data('phh2o', 'phh2o_0-5cm_mean', crs='urn:ogc:def:crs:EPSG::152160',
+                                  west=-1784000, south=1356000, east=-1140000, north=1863000,
+                                  output=os.path.join(tmpdir, 'test.tif'), local_file=True)
+    file2_info = os.path.getmtime(os.path.join(tmpdir, 'test.tif'))
+
+    assert file1_info == file2_info
