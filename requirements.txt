@@ -4,6 +4,6 @@ netcdf4
 numpy
 pyyaml
 requests
+rioxarray
 xarray
-rasterio
 owslib
