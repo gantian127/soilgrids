@@ -5,9 +5,9 @@
     :target: https://soilgrids.readthedocs.io/
 
 
-soilgrids package provides a set of functions that allow downloading of the global gridded soil information from
-`SoilGrids <https://www.isric.org/explore/soilgrids>`_, a system for global digital soil mapping to map the spatial
-distribution of soil properties across the globe.
+`soilgrids package <https://github.com/gantian127/soilgrids>`_ provides a set of functions that allow downloading of
+the global gridded soil information from `SoilGrids <https://www.isric.org/explore/soilgrids>`_,
+a system for global digital soil mapping to map the spatial distribution of soil properties across the globe.
 
 soilgrids package includes a `Basic Model Interface (BMI) <https://bmi.readthedocs.io/en/latest/>`_,
 which converts the SoilGrids dataset into a reusable, plug-and-play data component for
