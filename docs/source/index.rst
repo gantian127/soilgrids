@@ -71,6 +71,7 @@ You can launch binder to test and run the code below. |binder|
 **Example 2**: use BmiSoilGrids class to download data (Demonstration of how to use BMI).
 
 .. code-block:: python
+
     import matplotlib.pyplot as plt
     import numpy as np
 
