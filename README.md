@@ -5,8 +5,15 @@
 
 
 
-Python library to fetch the global gridded soil information from [SoilGrids](https://www.isric.org/explore/soilgrids),
+soilgrids provides a set of functions that allow downloading of
+the global gridded soil information from [SoilGrids](https://www.isric.org/explore/soilgrids),
 a system for global digital soil mapping to map the spatial distribution of soil properties across the globe.  
+
+soilgrids also includes a [Basic Model Interface (BMI)](https://bmi.readthedocs.io/en/latest/),
+which converts the SoilGrids dataset into a reusable,
+plug-and-play data component ([pymt_soilgrids](https://pymt-soilgrids.readthedocs.io/)) for 
+the [PyMT](https://pymt.readthedocs.io/en/latest/?badge=latest) modeling framework developed 
+by Community Surface Dynamics Modeling System ([CSDMS](https://csdms.colorado.edu/wiki/Main_Page)).
 
 If you have any suggestion to improve the current function, please create a github issue 
 [here](https://github.com/gantian127/soilgrids/issues).

@@ -10,9 +10,10 @@ the global gridded soil information from `SoilGrids <https://www.isric.org/explo
 a system for global digital soil mapping to map the spatial distribution of soil properties across the globe.
 
 soilgrids package includes a `Basic Model Interface (BMI) <https://bmi.readthedocs.io/en/latest/>`_,
-which converts the SoilGrids dataset into a reusable, plug-and-play data component for
-`Community Surface Dynamics Modeling System (CSDMS) <https://csdms.colorado.edu/wiki/Main_Page>`_ modeling framework.
-
+which converts the SoilGrids dataset into a reusable,
+plug-and-play data component (`pymt_soilgrids <https://pymt-soilgrids.readthedocs.io/>`_) for
+the `PyMT <https://pymt.readthedocs.io/en/latest/?badge=latest>`_ modeling framework developed
+by Community Surface Dynamics Modeling System (`CSDMS <https://csdms.colorado.edu/wiki/Main_Page>`_)
 
 Getting Started
 ===============
