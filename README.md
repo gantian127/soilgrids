@@ -30,7 +30,7 @@ $ pip install soilgrids
 ```
 or with conda.
 ```
-$ conda install soilgrids
+$ conda install -c conda-forge soilgrids
 ```
 ##### From Source
 
