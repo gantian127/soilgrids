@@ -23,12 +23,17 @@ Installation
 
 **Stable Release**
 
-The soilgrids package and its dependencies can be installed with pip.
+The soilgrids package and its dependencies can be installed with pip
 
 .. code-block:: console
 
     $ pip install soilgrids
 
+or with conda.
+
+.. code-block:: console
+
+    $ conda install soilgrids
 
 **From Source**
 
