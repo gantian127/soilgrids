@@ -33,7 +33,7 @@ or with conda.
 
 .. code-block:: console
 
-    $ conda install soilgrids
+    $ conda install -c conda-forge soilgrids
 
 **From Source**
 
