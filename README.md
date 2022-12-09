@@ -24,11 +24,14 @@ If you have any suggestion to improve the current function, please create a gith
 
 ##### Stable Release
 
-The soilgrids package and its dependencies can be installed with pip.
+The soilgrids package and its dependencies can be installed with pip
 ```
 $ pip install soilgrids
 ```
-
+or with conda.
+```
+$ conda install soilgrids
+```
 ##### From Source
 
 After downloading the source code, run the following command from top-level folder 
