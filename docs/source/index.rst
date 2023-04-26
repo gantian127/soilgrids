@@ -154,6 +154,7 @@ Parameter settings
   * soc: Soil organic carbon content
   * ocs: Soil organic carbon stock
   * ocd: Organic carbon densities
+  * wrb: World Reference Base (WRB) classes and probabilities
 
 * **coverage_id**: The identifier of a coverage(map) from a map service. Each map service supports
   multiple coverages. To get a list of the coverage id from a map service, use "get_coverage_list()" method.
