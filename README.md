@@ -126,5 +126,8 @@ fig.colorbar(im)
 plt.xlabel('X')
 plt.ylabel('Y')
 plt.title('Mean pH between 0 and 5 cm soil depth in Senegal')
+
+# finalize data component
+data_comp.finalize()
 ```
 
