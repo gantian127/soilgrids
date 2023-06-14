@@ -1,7 +1,6 @@
 # soilgrids
 [![Documentation Status](https://readthedocs.org/projects/soilgrids/badge/?version=latest)](https://soilgrids.readthedocs.io/en/latest/?badge=latest)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/gantian127/soilgrids/blob/master/LICENSE.txt)
-[![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/gantian127/soilgrids/master?filepath=notebooks%2Fsoilgrids.ipynb)
 
 
 
@@ -18,11 +17,9 @@ by Community Surface Dynamics Modeling System ([CSDMS](https://csdms.colorado.ed
 If you have any suggestion to improve the current function, please create a github issue 
 [here](https://github.com/gantian127/soilgrids/issues).
 
-## Get Started
+### Install package
 
-#### Install package
-
-##### Stable Release
+#### Stable Release
 
 The soilgrids package and its dependencies can be installed with pip
 ```
@@ -32,7 +29,7 @@ or with conda.
 ```
 $ conda install -c conda-forge soilgrids
 ```
-##### From Source
+#### From Source
 
 After downloading the source code, run the following command from top-level folder 
 (the one that contains setup.py) to install soilgrids.
@@ -40,10 +37,13 @@ After downloading the source code, run the following command from top-level fold
 $ pip install -e .
 ```
 
-#### Download SoilGrids Data
-You can launch binder to test and run the code below.
+### Quick Start
+Below shows how to use two methods to download the SoilGrids datasets. 
 
-##### Example 1: use SoilGrids class to download data (Recommended method)
+You can learn more details from the [tutorial notebook](notebooks/soilgrids.ipynb). To run this notebook,
+please go to the [CSDMS EKT Lab](https://csdms.colorado.edu/wiki/Lab-0019) and follow the instruction in the "Lab notes" section.
+
+#### Example 1: use SoilGrids class to download data (Recommended method)
 
 ```python
 import matplotlib.pyplot as plt
@@ -67,7 +67,7 @@ plt.title('Mean pH between 0 and 5 cm soil depth in Senegal')
 ![tif_plot](docs/source/_static/tif_plot.png)
 
 
-##### Example 2: use BmiSoilGrids class to download data (Demonstration of how to use BMI)
+#### Example 2: use BmiSoilGrids class to download data (Demonstration of how to use BMI)
 
 ```python
 import matplotlib.pyplot as plt
