@@ -15,8 +15,6 @@ plug-and-play data component (`pymt_soilgrids <https://pymt-soilgrids.readthedoc
 the `PyMT <https://pymt.readthedocs.io/en/latest/?badge=latest>`_ modeling framework developed
 by Community Surface Dynamics Modeling System (`CSDMS <https://csdms.colorado.edu/wiki/Main_Page>`_)
 
-Getting Started
-===============
 
 Installation
 ++++++++++++
@@ -45,10 +43,14 @@ After downloading the source code, run the following command from top-level fold
     $ pip install -e .
 
 
-Download SoilGrids Data
-++++++++++++++++++++++++
+Quick Start
++++++++++++
 
-You can launch binder to test and run the code below. |binder|
+Below shows how to use two methods to download the SoilGrids datasets.
+
+You can learn more details from the `tutorial notebook <https://github.com/gantian127/soilgrids/blob/master/notebooks/soilgrids.ipynb>`_.
+To run this notebook, please go to the `CSDMS EKT Lab <https://csdms.colorado.edu/wiki/Lab-0019>`_ and follow
+the instruction in the "Lab notes" section.
 
 **Example 1**: use SoilGrids class to download data (Recommended method)
 
@@ -134,6 +136,9 @@ You can launch binder to test and run the code below. |binder|
     plt.xlabel('X')
     plt.ylabel('Y')
     plt.title('Mean pH between 0 and 5 cm soil depth in Senegal')
+
+    # finalize data component
+    data_component.finalize()
 
 Parameter settings
 +++++++++++++++++++
