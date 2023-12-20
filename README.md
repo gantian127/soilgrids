@@ -1,5 +1,5 @@
 # soilgrids
-<!--[![DOI](https://zenodo.org/badge/318101462.svg)](https://zenodo.org/doi/10.5281/zenodo.10368882)-->
+[![DOI](https://zenodo.org/badge/318101462.svg)](https://zenodo.org/doi/10.5281/zenodo.10368882)
 [![Documentation Status](https://readthedocs.org/projects/soilgrids/badge/?version=latest)](https://soilgrids.readthedocs.io/en/latest/?badge=latest)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/gantian127/soilgrids/blob/master/LICENSE.txt)
 
