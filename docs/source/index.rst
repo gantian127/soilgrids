@@ -15,20 +15,23 @@ plug-and-play data component (`pymt_soilgrids <https://pymt-soilgrids.readthedoc
 the `PyMT <https://pymt.readthedocs.io/en/latest/?badge=latest>`_ modeling framework developed
 by Community Surface Dynamics Modeling System (`CSDMS <https://csdms.colorado.edu/wiki/Main_Page>`_)
 
-Getting Started
-===============
 
 Installation
 ++++++++++++
 
 **Stable Release**
 
-The soilgrids package and its dependencies can be installed with pip.
+The soilgrids package and its dependencies can be installed with pip
 
 .. code-block:: console
 
     $ pip install soilgrids
 
+or with conda.
+
+.. code-block:: console
+
+    $ conda install -c conda-forge soilgrids
 
 **From Source**
 
@@ -40,10 +43,14 @@ After downloading the source code, run the following command from top-level fold
     $ pip install -e .
 
 
-Download SoilGrids Data
-++++++++++++++++++++++++
+Quick Start
++++++++++++
 
-You can launch binder to test and run the code below. |binder|
+Below shows how to use two methods to download the SoilGrids datasets.
+
+You can learn more details from the `tutorial notebook <https://github.com/gantian127/soilgrids/blob/master/notebooks/soilgrids.ipynb>`_.
+To run this notebook, please go to the `CSDMS EKT Lab <https://csdms.colorado.edu/wiki/Lab-0019>`_ and follow
+the instruction in the "Lab notes" section.
 
 **Example 1**: use SoilGrids class to download data (Recommended method)
 
@@ -130,6 +137,9 @@ You can launch binder to test and run the code below. |binder|
     plt.ylabel('Y')
     plt.title('Mean pH between 0 and 5 cm soil depth in Senegal')
 
+    # finalize data component
+    data_component.finalize()
+
 Parameter settings
 +++++++++++++++++++
 "get_coverage_data()" method includes multiple parameters for data download. Details for each parameter are listed below.
@@ -149,6 +159,7 @@ Parameter settings
   * soc: Soil organic carbon content
   * ocs: Soil organic carbon stock
   * ocd: Organic carbon densities
+  * wrb: World Reference Base (WRB) classes and probabilities
 
 * **coverage_id**: The identifier of a coverage(map) from a map service. Each map service supports
   multiple coverages. To get a list of the coverage id from a map service, use "get_coverage_list()" method.

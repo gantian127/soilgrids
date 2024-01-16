@@ -74,6 +74,12 @@ class SoilGrids:
             'units': 'hg/dm3'
         },
 
+        'wrb': {
+            'name': 'World Reference Base (WRB) classes and probabilities',
+            'link': 'https://maps.isric.org/mapserv?map=/map/wrb.map',
+            'units': 'none'
+        },
+
     }  # service info at http://maps.isric.org/ https://www.isric.org/explore/soilgrids/faq-soilgrids
 
     def __init__(self):
@@ -92,8 +98,8 @@ class SoilGrids:
     def map_services(self):
         string_list = []
         for key, value in SoilGrids.MAP_SERVICES.items():
-            string_list.append('service id: {} \nvariable name: {} \nservice link: {}\n'.
-                               format(key, value['name'], value['link']))
+            string_list.append('service id: {} \nvariable name: {} \nvariable units: {}\nservice link: {}\n'.
+                               format(key, value['name'], value['units'], value['link']))
         print('\n'.join(string_list))
 
         return None
