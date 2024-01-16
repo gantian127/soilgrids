@@ -22,6 +22,12 @@ repos:
     types_or: [python, pyi, jupyter]
     additional_dependencies: [".[jupyter]"]
 
+- repo: https://github.com/keewis/blackdoc
+  rev: v0.3.9
+  hooks:
+  - id: blackdoc
+    description: "Black for doctests"
+
 - repo: https://github.com/pycqa/flake8
   rev: 7.0.0
   hooks:
@@ -30,6 +36,15 @@ repos:
     - flake8-bugbear
     - flake8-comprehensions
     - flake8-simplify
+
+- repo: https://github.com/nbQA-dev/nbQA
+  rev: 1.7.1
+  hooks:
+    - id: nbqa-pyupgrade
+      args: ["--py310-plus"]
+    - id: nbqa-isort
+    - id: nbqa-flake8
+      args: ["--extend-ignore=E402"]
 
 - repo: https://gitlab.com/kennon.mckeever/nbhooks
   rev: 1.0.1
