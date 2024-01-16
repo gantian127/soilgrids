@@ -1,0 +1,100 @@
+[project]
+name = "soilgrids"
+requires-python = ">=3.10"
+description = "Fetch global gridded soil information from the SoilGrids system https://www.isric.org/explore/soilgrids"
+keywords = [
+    "BMI",
+    "Basic Model Interface",
+    "soilgrids",
+]
+authors = [
+    { name = "Tian Gan", email = "jamy127@foxmail.com" },
+]
+maintainers = [
+    { name = "Tian Gan", email = "jamy127@foxmail.com" },
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Topic :: Scientific/Engineering :: Hydrology",
+    "Topic :: Scientific/Engineering :: Physics",
+]
+dependencies = [
+    "bmipy",
+    "click",
+    "netcdf4",
+    "numpy",
+    "owslib",
+    "pyyaml",
+    "requests",
+    "rioxarray",
+    "xarray",
+]
+dynamic = [
+    "version",
+    "readme",
+]
+
+[project.license]
+text = "MIT"
+
+[project.scripts]
+soilgrids = "soilgrids.cli:main"
+
+[project.urls]
+documentation = "https://github.com/gantian127/soilgrids"
+homepage = "https://github.com/gantian127/soilgrids"
+repository = "https://github.com/gantian127/soilgrids"
+
+[build-system]
+requires = [
+    "setuptools >=61",
+]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.dynamic.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[tool.setuptools.dynamic.version]
+attr = "soilgrids._version.__version__"
+
+[tool.setuptools.packages.find]
+where = [
+    "src",
+]
+
+[tool.coverage.run]
+relative_files = true
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = [
+    "src/soilgrids",
+    "tests",
+]
+norecursedirs = [
+    ".*",
+    "*.egg*",
+    "build",
+    "dist",
+]
+addopts = [
+    "--ignore=setup.py",
+    "--tb=native",
+    "--durations=16",
+    "--strict-markers",
+    "--doctest-modules",
+    "-vvv",
+]
+
+[tool.zest-releaser]
+tag-format = "v{version}"
+python-file-with-version = "src/soilgrids/_version.py"
