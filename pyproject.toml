@@ -57,6 +57,16 @@ repository = "https://github.com/gantian127/soilgrids"
 dev = [
     "nox",
 ]
+notebooks = [
+    "jupyter",
+    "matplotlib",
+    "numpy",
+]
+testing = [
+    "nbmake",
+    "pytest",
+    "pytest-cov",
+]
 
 [build-system]
 requires = [
