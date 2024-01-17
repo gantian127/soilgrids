@@ -1,12 +1,7 @@
-from .soilgrids import SoilGrids
-from .bmi import BmiSoilGrids
-from ._version import get_versions
+from __future__ import annotations
 
-__all__ = ["SoilGrids", "BmiSoilGrids"]
+from soilgrids._version import __version__
+from soilgrids.bmi import BmiSoilGrids
+from soilgrids.soilgrids import SoilGrids
 
-__version__ = get_versions()['version']
-del get_versions
-
-from ._version import get_versions
-__version__ = get_versions()['version']
-del get_versions
+__all__ = ["__version__", "BmiSoilGrids", "SoilGrids"]

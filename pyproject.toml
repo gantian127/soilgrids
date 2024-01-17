@@ -53,6 +53,11 @@ documentation = "https://github.com/gantian127/soilgrids"
 homepage = "https://github.com/gantian127/soilgrids"
 repository = "https://github.com/gantian127/soilgrids"
 
+[project.optional-dependencies]
+dev = [
+    "nox",
+]
+
 [build-system]
 requires = [
     "setuptools >=61",

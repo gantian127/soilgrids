@@ -2,8 +2,8 @@ bmipy
 click
 netcdf4
 numpy
+owslib
 pyyaml
 requests
 rioxarray
 xarray
-owslib

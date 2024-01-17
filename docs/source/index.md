@@ -215,4 +215,3 @@ data_component.finalize()
 [soilgrids-isric]: https://www.isric.org/explore/soilgrids
 [soilgrids-notebook]: https://github.com/gantian127/soilgrids/blob/master/notebooks/soilgrids.ipynb
 [soilgrids-pymt]: https://pymt-soilgrids.readthedocs.io
-

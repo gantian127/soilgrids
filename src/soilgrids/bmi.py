@@ -1,13 +1,11 @@
-# -*- coding: utf-8 -*-
+from __future__ import annotations
+
 from collections import namedtuple
-from typing import Tuple
 
 import numpy
 import yaml
-
 from bmipy import Bmi
-
-from soilgrids import SoilGrids
+from soilgrids.soilgrids import SoilGrids
 
 BmiVar = namedtuple(
     "BmiVar", ["dtype", "itemsize", "nbytes", "units", "location", "grid"]
@@ -37,7 +35,6 @@ class BmiSoilGrids(Bmi):
         self._output_var_names = ()
         self._dataset = None
 
-
     def get_component_name(self) -> str:
         """Name of the component.
         Returns
@@ -65,7 +62,9 @@ class BmiSoilGrids(Bmi):
         """
         return 0.0
 
-    def get_grid_face_edges(self, grid: int, face_edges: numpy.ndarray) -> numpy.ndarray:
+    def get_grid_face_edges(
+        self, grid: int, face_edges: numpy.ndarray
+    ) -> numpy.ndarray:
         """Get the face-edge connectivity.
 
         Parameters
@@ -315,7 +314,7 @@ class BmiSoilGrids(Bmi):
         """
         raise NotImplementedError("get_grid_z")
 
-    def get_input_var_names(self) -> Tuple[str]:
+    def get_input_var_names(self) -> tuple[str]:
         """List of a model's input variables.
         Input variable names must be CSDMS Standard Names, also known
         as *long variable names*.
@@ -343,7 +342,7 @@ class BmiSoilGrids(Bmi):
         """
         return len(self._input_var_names)
 
-    def get_output_var_names(self) -> Tuple[str]:
+    def get_output_var_names(self) -> tuple[str]:
         """List of a model's output variables.
         Output variable names must be CSDMS Standard Names, also known
         as *long variable names*.
@@ -433,7 +432,8 @@ class BmiSoilGrids(Bmi):
         array_like
             Value of the model variable at the given location.
         """
-        # return the value at current time step with given index in 1D or 2D grid. when it is scalar no need for ind
+        # return the value at current time step with given index in 1D or
+        # 2D grid. when it is scalar no need for ind
         dest[:] = self.get_value_ptr(name).reshape(-1)[inds]
         return dest
 
@@ -451,7 +451,8 @@ class BmiSoilGrids(Bmi):
         array_like
             A reference to a model variable.
         """
-        # return a reference of all the value at current time step. mainly for input data. not useful for scalar value
+        # return a reference of all the value at current time step. mainly
+        # for input data. not useful for scalar value
         add_offset = self._dataset.add_offset
         scale_factor = self._dataset.scale_factor
 
@@ -584,39 +585,47 @@ class BmiSoilGrids(Bmi):
         with placeholder values is used by the BMI.
         """
         if config_file:
-            with open(config_file, "r") as fp:
-                conf = yaml.safe_load(fp).get('bmi-soilgrids', {})
+            with open(config_file) as fp:
+                conf = yaml.safe_load(fp).get("bmi-soilgrids", {})
         else:
-            conf = {'service_id': 'phh2o',
-                    'coverage_id': 'phh2o_0-5cm_mean',
-                    'crs': 'urn:ogc:def:crs:EPSG::152160',
-                    'west': -1784000,
-                    'south': 1356000,
-                    'east': -1140000,
-                    'north': 1863000,
-                    'output': 'test.tif'}
+            conf = {
+                "service_id": "phh2o",
+                "coverage_id": "phh2o_0-5cm_mean",
+                "crs": "urn:ogc:def:crs:EPSG::152160",
+                "west": -1784000,
+                "south": 1356000,
+                "east": -1140000,
+                "north": 1863000,
+                "output": "test.tif",
+            }
 
         soilgrids = SoilGrids()
         self._dataset = soilgrids.get_coverage_data(**conf)
 
-        self._output_var_names = tuple([soilgrids.metadata['variable_name']])
+        self._output_var_names = (soilgrids.metadata["variable_name"],)
 
         array = self._dataset[0].values
         self._grid = {
             0: BmiGridUniformRectilinear(
                 shape=[int(dim) for dim in array.shape],
-                yx_spacing=(soilgrids.metadata['grid_res'][1], soilgrids.metadata['grid_res'][0]),  # original grid_res is (x,y)
+                yx_spacing=(
+                    soilgrids.metadata["grid_res"][1],
+                    soilgrids.metadata["grid_res"][0],
+                ),  # original grid_res is (x,y)
                 yx_of_lower_left=(
-                    self._dataset.coords['y'].values[-1],
-                    self._dataset.coords['x'].values[0]),
+                    self._dataset.coords["y"].values[-1],
+                    self._dataset.coords["x"].values[0],
                 ),
+            ),
         }
 
         self._var[self._output_var_names[0]] = BmiVar(
             dtype=str(array.dtype),
             itemsize=array.itemsize,
             nbytes=array.nbytes,  # nbytes for current time step value
-            units=soilgrids.metadata["variable_units"],  # TODO: translate var name into CSDMS standard name
+            units=soilgrids.metadata[
+                "variable_units"
+            ],  # TODO: translate var name into CSDMS standard name
             location="node",  # scalar value has no location on a grid (node, face, edge)
             grid=0,  # grid id number
         )
