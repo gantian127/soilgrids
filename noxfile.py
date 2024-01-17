@@ -13,6 +13,7 @@ ROOT = pathlib.Path(__file__).parent
 @nox.session
 def test(session: nox.Session) -> None:
     """Run the tests."""
+    session.install("pytest", "pytest-cov")
     session.install(".")
 
     args = ["--cov", PROJECT, "-vvv"] + session.posargs
@@ -40,6 +41,25 @@ def build(session: nox.Session) -> None:
     session.run("python", "--version")
     session.run("pip", "--version")
     session.run("python", "-m", "build", "--outdir", "./build/wheelhouse")
+
+
+@nox.session(name="build-docs", reuse_venv=True)
+def build_docs(session: nox.Session) -> None:
+    """Build the docs."""
+    session.install("myst-parser", "sphinx", "sphinx_copybutton", "sphinx-inline-tabs")
+    session.install(".")
+
+    pathlib.Path("build").mkdir(exist_ok=True)
+    with session.chdir(ROOT):
+        session.run(
+            "sphinx-build",
+            "-b",
+            "html",
+            "-W",
+            "--keep-going",
+            "docs/source",
+            "build/html",
+        )
 
 
 @nox.session
