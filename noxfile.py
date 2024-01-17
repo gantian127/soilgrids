@@ -13,8 +13,7 @@ ROOT = pathlib.Path(__file__).parent
 @nox.session
 def test(session: nox.Session) -> None:
     """Run the tests."""
-    session.install("pytest", "pytest-cov")
-    session.install(".")
+    session.install(".[testing]")
 
     args = ["--cov", PROJECT, "-vvv"] + session.posargs
 
@@ -24,6 +23,21 @@ def test(session: nox.Session) -> None:
 
     if "CI" not in os.environ:
         session.run("coverage", "report", "--ignore-errors", "--show-missing")
+
+
+@nox.session(name="test-notebooks")
+def test_notebooks(session: nox.Session) -> None:
+    """Run the notebooks."""
+    session.install(".[testing,notebooks]")
+
+    session.run(
+        "pytest",
+        "notebooks",
+        "--nbmake",
+        "--nbmake-kernel=python3",
+        "--nbmake-timeout=3000",
+        "-vvv",
+    )
 
 
 @nox.session
