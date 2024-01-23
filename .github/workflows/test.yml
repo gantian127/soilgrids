@@ -32,7 +32,7 @@ jobs:
       - name: Test
         run: |
           pip install nox
-          nox --non-interactive --error-on-missing-interpreter -s test
+          nox --non-interactive --error-on-missing-interpreter -s test test-notebooks
 
       - name: Coveralls
         if: matrix.os == 'ubuntu-latest'
