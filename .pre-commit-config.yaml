@@ -1,0 +1,92 @@
+repos:
+- repo: https://github.com/psf/black
+  rev: 23.12.1
+  hooks:
+  - id: black
+    name: black
+    description: "Black: The uncompromising Python code formatter"
+    entry: black
+    language: python
+    language_version: python3
+    minimum_pre_commit_version: 2.9.2
+    require_serial: true
+    types_or: [python, pyi]
+  - id: black-jupyter
+    name: black-jupyter
+    description:
+      "Black: The uncompromising Python code formatter (with Jupyter Notebook support)"
+    entry: black
+    language: python
+    minimum_pre_commit_version: 2.9.2
+    require_serial: true
+    types_or: [python, pyi, jupyter]
+    additional_dependencies: [".[jupyter]"]
+
+- repo: https://github.com/adamchainz/blacken-docs
+  rev: 1.16.0
+  hooks:
+  - id: blacken-docs
+
+- repo: https://github.com/keewis/blackdoc
+  rev: "v0.3.9"
+  hooks:
+  - id: blackdoc
+
+- repo: https://github.com/pycqa/flake8
+  rev: 7.0.0
+  hooks:
+  - id: flake8
+    additional_dependencies:
+    - flake8-bugbear
+    - flake8-comprehensions
+    - flake8-simplify
+
+- repo: https://github.com/nbQA-dev/nbQA
+  rev: 1.7.1
+  hooks:
+    - id: nbqa-pyupgrade
+      args: ["--py310-plus"]
+    - id: nbqa-isort
+    - id: nbqa-flake8
+      args: ["--extend-ignore=E402"]
+
+- repo: https://github.com/kynan/nbstripout
+  rev: 0.6.1
+  hooks:
+    - id: nbstripout
+      description: Strip output from jupyter notebooks
+      args: [--drop-empty-cells]
+
+- repo: https://github.com/asottile/pyupgrade
+  rev: v3.15.0
+  hooks:
+  - id: pyupgrade
+    args: [--py310-plus]
+
+- repo: https://github.com/asottile/reorder-python-imports
+  rev: v3.12.0
+  hooks:
+  - id: reorder-python-imports
+    args: [--py310-plus, --add-import, "from __future__ import annotations"]
+
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v4.5.0
+  hooks:
+    - id: check-builtin-literals
+    - id: check-added-large-files
+    - id: check-case-conflict
+    - id: check-toml
+    - id: check-yaml
+    - id: debug-statements
+    - id: end-of-file-fixer
+    - id: forbid-new-submodules
+    - id: mixed-line-ending
+    - id: trailing-whitespace
+    - id: name-tests-test
+    - id: file-contents-sorter
+      files: |
+        (?x)^(
+          .*requirements(-\w+)?.(in|txt)|
+          requirements/.*\.txt|
+          .gitignore
+        )
