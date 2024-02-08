@@ -36,7 +36,7 @@ conda install -c conda-forge soilgrids
 **From Source**
 
 After downloading the source code, run the following command from top-level folder
-(the one that contains setup.py) to install soilgrids.
+to install soilgrids.
 
 ```console
 pip install -e .
@@ -150,7 +150,7 @@ plt.ylabel("Y")
 plt.title("Mean pH between 0 and 5 cm soil depth in Senegal")
 
 # finalize data component
-data_component.finalize()
+data_comp.finalize()
 ```
 
 # Parameter settings

@@ -33,7 +33,7 @@ $ conda install -c conda-forge soilgrids
 #### From Source
 
 After downloading the source code, run the following command from top-level folder
-(the one that contains setup.py) to install soilgrids.
+to install soilgrids.
 ```
 $ pip install -e .
 ```
