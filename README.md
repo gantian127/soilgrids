@@ -69,7 +69,7 @@ for key, value in soil_grids.metadata.items():
 
 
 # plot data
-data.plot(figsize=(9, 5))
+data.plot(figsize=(9, 5), vmin=0)
 plt.title("Mean pH between 0 and 5 cm soil depth in Senegal")
 ```
 ![tif_plot](docs/source/_static/tif_plot.png)
@@ -136,7 +136,7 @@ extent = [min_x - dx, max_x + dx, min_y - dy, max_y + dy]
 
 # plot data
 fig, ax = plt.subplots(1, 1, figsize=(9, 5))
-im = ax.imshow(data_2D, extent=extent)
+im = ax.imshow(data_2D, extent=extent, vmin=0)
 fig.colorbar(im)
 plt.xlabel("X")
 plt.ylabel("Y")
