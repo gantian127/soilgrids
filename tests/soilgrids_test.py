@@ -4,7 +4,7 @@ import os
 
 import pytest
 import xarray
-from soilgrids import SoilGrids
+from soilgrids import SoilGrids, SoilGridsWcsError
 
 
 # test get_coverage_list()
@@ -173,7 +173,7 @@ xmlns="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-i
     monkeypatch.setattr(soilgrids, "_get_coverage_obj", lambda *_args: DummyCoverage())
 
     output = tmp_path / "test.tif"
-    with pytest.raises(Exception) as excinfo:
+    with pytest.raises(SoilGridsWcsError) as excinfo:
         soilgrids.get_coverage_data(
             "phh2o",
             "phh2o_0-5cm_mean",
@@ -185,8 +185,9 @@ xmlns="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-i
             output=str(output),
         )
 
-    assert "WCS sever error" in str(excinfo.value)
+    assert "WCS server error" in str(excinfo.value)
     assert "out of memory" in str(excinfo.value)
+    assert excinfo.value.service_exception is not None
     assert not output.exists()
 
 
