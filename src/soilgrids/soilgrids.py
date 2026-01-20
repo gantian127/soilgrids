@@ -4,9 +4,8 @@ import os
 import xml.etree.ElementTree as ET
 
 import rioxarray
-from owslib.wcs import WebCoverageService
 from owslib.util import ServiceException
-
+from owslib.wcs import WebCoverageService
 from soilgrids.exceptions import SoilGridsWcsError
 
 
@@ -341,7 +340,9 @@ def _extract_ogc_service_exception(xml_text: str) -> str | None:
         for elem in root.iter():
             if isinstance(elem.tag, str) and elem.tag.endswith(tag_suffix):
                 message = "\n".join(
-                    t.strip() for t in elem.itertext() if isinstance(t, str) and t.strip()
+                    t.strip()
+                    for t in elem.itertext()
+                    if isinstance(t, str) and t.strip()
                 )
                 if message:
                     return message

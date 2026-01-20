@@ -18,4 +18,3 @@ class SoilGridsWcsError(SoilGridsError):
         self.service_exception = service_exception
         self.raw = raw
         self.request = request or {}
-

@@ -4,7 +4,8 @@ import os
 
 import pytest
 import xarray
-from soilgrids import SoilGrids, SoilGridsWcsError
+from soilgrids import SoilGrids
+from soilgrids import SoilGridsWcsError
 
 
 # test get_coverage_list()
@@ -136,9 +137,9 @@ def test_response_crs():
 
 def test_wcs_service_exception_report_is_raised(tmp_path, monkeypatch):
     xml_error = """<?xml version='1.0' encoding="UTF-8" ?>
-<ServiceExceptionReport version="1.2.0"
-xmlns="http://www.opengis.net/ogc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/ogc http://schemas.opengis.net/wcs/1.0.0/OGC-exception.xsd">
-  <ServiceException>msImageCreate(): Image handling error. Attempt to allocate raw image failed, out of memory.
+<ServiceExceptionReport xmlns="http://www.opengis.net/ogc">
+  <ServiceException>
+    msImageCreate(): Image handling error. Attempt to allocate raw image failed, out of memory.
   </ServiceException>
 </ServiceExceptionReport>
 """
