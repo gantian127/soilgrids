@@ -374,12 +374,14 @@ def _format_wcs_error_message(details: str, request_context: dict[str, object]) 
         est_width = int(abs(east - west) / resx)
         est_height = int(abs(north - south) / resy)
 
-    pixels = est_width * est_height if est_width and est_height else None
-    pixel_hint = (
-        f" Estimated request size: {est_width}x{est_height} pixels."
-        if pixels is not None
-        else ""
-    )
+    pixel_hint = ""
+    if est_width and est_height:
+        pixels = est_width * est_height
+        pixels_m = pixels / 1_000_000
+        pixel_hint = (
+            f" Estimated request size: {est_width}x{est_height} pixels"
+            f" ({pixels_m:.2f}M pixels)."
+        )
 
     hint = (
         " Try reducing the bounding box, increasing resx/resy, or tiling the request."
