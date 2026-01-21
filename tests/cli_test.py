@@ -5,6 +5,7 @@ import os
 
 import pytest
 from click.testing import CliRunner
+from soilgrids import SoilGridsWcsError
 from soilgrids.cli import main
 
 
@@ -143,6 +144,32 @@ def test_local_file():
     )
 
     assert result.exit_code != 0
+
+
+def test_cli_converts_soilgrids_error_to_click_exception(monkeypatch, tmp_path):
+    import soilgrids.cli as cli_module
+
+    def raise_wcs_error(*_args, **_kwargs):
+        raise SoilGridsWcsError("WCS server error. out of memory", request={})
+
+    monkeypatch.setattr(cli_module.SoilGrids, "get_coverage_data", raise_wcs_error)
+
+    runner = CliRunner()
+    result = runner.invoke(
+        main,
+        [
+            "--service_id=phh2o",
+            "--coverage_id=phh2o_0-5cm_mean",
+            "--crs=urn:ogc:def:crs:EPSG::152160",
+            "--bbox=-1,0,1,2",
+            str(tmp_path / "test.tif"),
+        ],
+    )
+
+    assert result.exit_code != 0
+    assert "Error:" in result.output
+    assert "out of memory" in result.output
+    assert "Traceback" not in result.output
 
 
 @pytest.mark.filterwarnings("ignore:numpy.ufunc size")
