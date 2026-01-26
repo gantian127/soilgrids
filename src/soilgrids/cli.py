@@ -4,6 +4,7 @@ import os
 
 import click
 from soilgrids._version import __version__
+from soilgrids.exceptions import SoilGridsError
 from soilgrids.soilgrids import SoilGrids
 
 
@@ -104,21 +105,24 @@ def main(
     output,
 ):
     west, south, east, north = list(map(float, bbox.split(",")))
-    SoilGrids().get_coverage_data(
-        service_id=service_id,
-        coverage_id=coverage_id,
-        crs=crs,
-        west=west,
-        south=south,
-        east=east,
-        north=north,
-        output=output,
-        resx=resx,
-        resy=resy,
-        width=width,
-        height=height,
-        response_crs=response_crs,
-        local_file=local_file,
-    )
+    try:
+        SoilGrids().get_coverage_data(
+            service_id=service_id,
+            coverage_id=coverage_id,
+            crs=crs,
+            west=west,
+            south=south,
+            east=east,
+            north=north,
+            output=output,
+            resx=resx,
+            resy=resy,
+            width=width,
+            height=height,
+            response_crs=response_crs,
+            local_file=local_file,
+        )
+    except SoilGridsError as exc:
+        raise click.ClickException(str(exc)) from exc
     if os.path.isfile(output):
         print("Done")

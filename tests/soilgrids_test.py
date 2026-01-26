@@ -5,6 +5,7 @@ import os
 import pytest
 import xarray
 from soilgrids import SoilGrids
+from soilgrids import SoilGridsWcsError
 
 
 # test get_coverage_list()
@@ -132,6 +133,63 @@ def test_response_crs():
             response_crs="error",
             output="test.tif",
         )
+
+
+def test_wcs_service_exception_report_is_raised(tmp_path, monkeypatch):
+    xml_error = """<?xml version='1.0' encoding="UTF-8" ?>
+<ServiceExceptionReport xmlns="http://www.opengis.net/ogc">
+  <ServiceException>
+    msImageCreate(): Image handling error. Attempt to allocate raw image failed, out of memory.
+  </ServiceException>
+</ServiceExceptionReport>
+"""
+
+    class DummyCRS:
+        def __init__(self, code):
+            self._code = code
+
+        def getcodeurn(self):
+            return self._code
+
+    class DummyCoverage:
+        supportedCRS = [DummyCRS("urn:ogc:def:crs:EPSG::152160")]
+
+    class DummyResponse:
+        def info(self):
+            return {"Content-Type": "application/xml"}
+
+        def read(self):
+            return xml_error.encode("utf-8")
+
+    class DummyWCS:
+        def getCoverage(self, **_kwargs):
+            return DummyResponse()
+
+    soilgrids = SoilGrids()
+    monkeypatch.setattr(
+        soilgrids,
+        "_get_service_and_coverage_list",
+        lambda _service_id: (DummyWCS(), ["phh2o_0-5cm_mean"]),
+    )
+    monkeypatch.setattr(soilgrids, "_get_coverage_obj", lambda *_args: DummyCoverage())
+
+    output = tmp_path / "test.tif"
+    with pytest.raises(SoilGridsWcsError) as excinfo:
+        soilgrids.get_coverage_data(
+            "phh2o",
+            "phh2o_0-5cm_mean",
+            crs="urn:ogc:def:crs:EPSG::152160",
+            west=-1784000,
+            south=1356000,
+            east=-1140000,
+            north=1863000,
+            output=str(output),
+        )
+
+    assert "WCS server error" in str(excinfo.value)
+    assert "out of memory" in str(excinfo.value)
+    assert excinfo.value.service_exception is not None
+    assert not output.exists()
 
 
 # test data download for get_coverage_data()
