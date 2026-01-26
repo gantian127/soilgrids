@@ -249,7 +249,7 @@ class SoilGrids:
                 except Exception as exc:
                     raise SoilGridsWcsError(
                         _format_wcs_error_message(
-                            f"Failed to save the data as a GeoTiff file to '{output}': {exc}",
+                            f"Failed to save the data as a GeoTiff file to {output!r}: {exc}",
                             request_context,
                         ),
                         raw=str(exc),

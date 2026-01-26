@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import pytest
 
-from soilgrids.soilgrids import _extract_ogc_service_exception
-from soilgrids.soilgrids import _format_wcs_error_message
-from soilgrids.soilgrids import _normalize_content_type
+from soilgrids.soilgrids import (
+    _extract_ogc_service_exception,
+    _format_wcs_error_message,
+    _normalize_content_type,
+)
 
 
 @pytest.mark.parametrize(
