@@ -88,6 +88,13 @@ def test_format_wcs_error_message_uses_width_height():
     assert f"Request: {request_context!r}" in msg
 
 
+def test_format_wcs_error_message_omits_hint_for_non_size_errors():
+    request_context = {"width": 100, "height": 100}
+    msg = _format_wcs_error_message("Authentication failed", request_context)
+    assert "Estimated request size: 100x100 pixels" in msg
+    assert "Try reducing the bounding box" not in msg
+
+
 def test_format_wcs_error_message_estimates_from_bbox_and_resolution():
     request_context = {
         "bbox": (-1784000, 1356000, -1140000, 1863000),
@@ -99,6 +106,13 @@ def test_format_wcs_error_message_estimates_from_bbox_and_resolution():
     msg = _format_wcs_error_message("WCS failure", request_context)
     assert "Estimated request size: 2576x2028 pixels" in msg
     assert "(5.22M pixels)." in msg
+
+
+def test_format_wcs_error_message_includes_hint_when_pixel_count_is_large():
+    request_context = {"bbox": (0, 0, 1_000_000, 1_000_000), "resx": 1, "resy": 1}
+    msg = _format_wcs_error_message("Service error", request_context)
+    assert "Estimated request size: 1000000x1000000 pixels" in msg
+    assert "Try reducing the bounding box" in msg
 
 
 @pytest.mark.parametrize(
@@ -116,6 +130,7 @@ def test_format_wcs_error_message_omits_pixel_hint_when_uncomputable(
 ):
     msg = _format_wcs_error_message("Failure", request_context)
     assert "Estimated request size" not in msg
+    assert "Try reducing the bounding box" not in msg
 
 
 def test_format_wcs_error_message_ignores_partial_width_height_and_uses_bbox():
@@ -128,4 +143,3 @@ def test_format_wcs_error_message_ignores_partial_width_height_and_uses_bbox():
     }
     msg = _format_wcs_error_message("Failure", request_context)
     assert "Estimated request size: 2576x2028 pixels" in msg
-

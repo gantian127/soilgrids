@@ -382,6 +382,7 @@ def _format_wcs_error_message(details: str, request_context: dict[str, object]) 
         est_height = int(abs(north - south) / resy)
 
     pixel_hint = ""
+    pixels = None
     if est_width and est_height:
         pixels = est_width * est_height
         pixels_m = pixels / 1_000_000
@@ -390,8 +391,26 @@ def _format_wcs_error_message(details: str, request_context: dict[str, object]) 
             f" ({pixels_m:.2f}M pixels)."
         )
 
+    details_lower = details.lower() if details else ""
+    size_error_keywords = (
+        "memory",
+        "out of memory",
+        "too large",
+        "too big",
+        "size",
+        "exceed",
+        "exceeded",
+        "limit",
+        "maximum",
+    )
+    size_hint_pixel_threshold = 50_000_000
+    include_hint = any(k in details_lower for k in size_error_keywords) or (
+        isinstance(pixels, int) and pixels >= size_hint_pixel_threshold
+    )
     hint = (
         " Try reducing the bounding box, increasing resx/resy, or tiling the request."
+        if include_hint
+        else ""
     )
 
     return (
