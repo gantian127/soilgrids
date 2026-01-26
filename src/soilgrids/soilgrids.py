@@ -245,9 +245,15 @@ class SoilGrids:
                 try:
                     with open(output, "wb") as file:
                         file.write(body)
-                except Exception:
-                    print("Failed to save the data as a GeoTiff file.")
-                    raise
+                except Exception as exc:
+                    raise SoilGridsWcsError(
+                        _format_wcs_error_message(
+                            f"Failed to save the data as a GeoTiff file to '{output}': {exc}",
+                            request_context,
+                        ),
+                        raw=str(exc),
+                        request=request_context,
+                    ) from exc
             else:
                 raw = body.decode("utf-8", errors="replace")
                 service_exception = _extract_ogc_service_exception(raw)
