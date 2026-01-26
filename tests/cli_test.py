@@ -5,17 +5,17 @@ import os
 
 import pytest
 from click.testing import CliRunner
+import soilgrids.cli as cli_module
 from soilgrids import SoilGridsWcsError
-from soilgrids.cli import main
 
 
 def test_command_line_interface():
     runner = CliRunner()
-    result = runner.invoke(main, ["--help"])
+    result = runner.invoke(cli_module.main, ["--help"])
     assert result.exit_code == 0
     assert "Usage:" in result.output
 
-    result = runner.invoke(main, ["--version"])
+    result = runner.invoke(cli_module.main, ["--version"])
     assert result.exit_code == 0
     assert "version" in result.output
 
@@ -24,7 +24,7 @@ def test_output(tmpdir):
     runner = CliRunner()
 
     result = runner.invoke(
-        main,
+        cli_module.main,
         [
             "--service_id=phh2o",
             "--coverage_id=phh2o_0-5cm_mean",
@@ -39,7 +39,7 @@ def test_output(tmpdir):
 def test_service_id():
     runner = CliRunner()
     result = runner.invoke(
-        main,
+        cli_module.main,
         [
             "--service_id=error",
             "--coverage_id=phh2o_0-5cm_mean",
@@ -54,7 +54,7 @@ def test_service_id():
 def test_coverage_id():
     runner = CliRunner()
     result = runner.invoke(
-        main,
+        cli_module.main,
         [
             "--service_id=phh2o",
             "--coverage_id=error",
@@ -69,7 +69,7 @@ def test_coverage_id():
 def test_crs():
     runner = CliRunner()
     result = runner.invoke(
-        main,
+        cli_module.main,
         [
             "--service_id=phh2o",
             "--coverage_id=phh2o_0-5cm_mean",
@@ -84,7 +84,7 @@ def test_crs():
 def test_bbox():
     runner = CliRunner()
     result = runner.invoke(
-        main,
+        cli_module.main,
         [
             "--service_id=phh2o",
             "--coverage_id=phh2o_0-5cm_mean",
@@ -99,7 +99,7 @@ def test_bbox():
 def test_width_height():
     runner = CliRunner()
     result = runner.invoke(
-        main,
+        cli_module.main,
         [
             "--service_id=phh2o",
             "--coverage_id=phh2o_0-5cm_mean",
@@ -115,7 +115,7 @@ def test_width_height():
 def test_response_crs():
     runner = CliRunner()
     result = runner.invoke(
-        main,
+        cli_module.main,
         [
             "--service_id=phh2o",
             "--coverage_id=phh2o_0-5cm_mean",
@@ -132,7 +132,7 @@ def test_response_crs():
 def test_local_file():
     runner = CliRunner()
     result = runner.invoke(
-        main,
+        cli_module.main,
         [
             "--service_id=phh2o",
             "--coverage_id=phh2o_0-5cm_mean",
@@ -147,8 +147,6 @@ def test_local_file():
 
 
 def test_cli_converts_soilgrids_error_to_click_exception(monkeypatch, tmp_path):
-    import soilgrids.cli as cli_module
-
     def raise_wcs_error(*_args, **_kwargs):
         raise SoilGridsWcsError("WCS server error. out of memory", request={})
 
@@ -156,7 +154,7 @@ def test_cli_converts_soilgrids_error_to_click_exception(monkeypatch, tmp_path):
 
     runner = CliRunner()
     result = runner.invoke(
-        main,
+        cli_module.main,
         [
             "--service_id=phh2o",
             "--coverage_id=phh2o_0-5cm_mean",
@@ -177,7 +175,7 @@ def test_data_download(tmpdir):
     runner = CliRunner()
     with tmpdir.as_cwd():
         result = runner.invoke(
-            main,
+            cli_module.main,
             [
                 "--service_id=phh2o",
                 "--coverage_id=phh2o_0-5cm_mean",
@@ -194,7 +192,7 @@ def test_data_download(tmpdir):
 
     with tmpdir.as_cwd():
         result = runner.invoke(
-            main,
+            cli_module.main,
             [
                 "--service_id=phh2o",
                 "--coverage_id=phh2o_0-5cm_mean",
@@ -210,7 +208,7 @@ def test_data_download(tmpdir):
 
     with tmpdir.as_cwd():
         result = runner.invoke(
-            main,
+            cli_module.main,
             [
                 "--service_id=phh2o",
                 "--coverage_id=phh2o_0-5cm_mean",
@@ -231,7 +229,7 @@ def test_load_localfile(tmpdir):
     runner = CliRunner()
     with tmpdir.as_cwd():
         result = runner.invoke(
-            main,
+            cli_module.main,
             [
                 "--service_id=phh2o",
                 "--coverage_id=phh2o_0-5cm_mean",
@@ -249,7 +247,7 @@ def test_load_localfile(tmpdir):
 
     with tmpdir.as_cwd():
         result = runner.invoke(
-            main,
+            cli_module.main,
             [
                 "--service_id=phh2o",
                 "--coverage_id=phh2o_0-5cm_mean",
