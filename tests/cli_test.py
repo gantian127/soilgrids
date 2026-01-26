@@ -4,8 +4,8 @@ from __future__ import annotations
 import os
 
 import pytest
-from click.testing import CliRunner
 import soilgrids.cli as cli_module
+from click.testing import CliRunner
 from soilgrids import SoilGridsWcsError
 
 
