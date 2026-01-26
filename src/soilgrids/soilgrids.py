@@ -227,6 +227,7 @@ class SoilGrids:
                 raise SoilGridsWcsError(
                     _format_wcs_error_message(str(exc), request_context),
                     service_exception=str(exc),
+                    raw=str(exc),
                     request=request_context,
                 ) from exc
             except Exception as exc:
