@@ -94,7 +94,6 @@ import numpy as np
 
 from soilgrids import BmiSoilGrids
 
-
 # initiate a data component
 data_comp = BmiSoilGrids()
 data_comp.initialize("config_file.yaml")

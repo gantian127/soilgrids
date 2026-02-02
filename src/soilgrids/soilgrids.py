@@ -1,9 +1,12 @@
 from __future__ import annotations
 
 import os
+import xml.etree.ElementTree as ET
 
 import rioxarray
+from owslib.util import ServiceException
 from owslib.wcs import WebCoverageService
+from soilgrids.exceptions import SoilGridsWcsError
 
 
 class SoilGrids:
@@ -195,31 +198,73 @@ class SoilGrids:
         if local_file and os.path.isfile(output):
             pass
         else:
-            # subset coverage data
-            response = wcs.getCoverage(
-                identifier=coverage_id,
-                crs=crs,
-                bbox=bbox,
-                resx=resx,
-                resy=resy,
-                width=width,
-                height=height,
-                response_crs=response_crs,
-                format="GEOTIFF_INT16",
-            )
+            request_context = {
+                "service_id": service_id,
+                "coverage_id": coverage_id,
+                "crs": crs,
+                "bbox": bbox,
+                "resx": resx,
+                "resy": resy,
+                "width": width,
+                "height": height,
+                "response_crs": response_crs,
+                "format": "GEOTIFF_INT16",
+            }
 
-            # write data to file
-            if response.info()["Content-Type"] == "image/tiff":
+            try:
+                response = wcs.getCoverage(
+                    identifier=coverage_id,
+                    crs=crs,
+                    bbox=bbox,
+                    resx=resx,
+                    resy=resy,
+                    width=width,
+                    height=height,
+                    response_crs=response_crs,
+                    format="GEOTIFF_INT16",
+                )
+            except ServiceException as exc:
+                raise SoilGridsWcsError(
+                    _format_wcs_error_message(str(exc), request_context),
+                    service_exception=str(exc),
+                    raw=str(exc),
+                    request=request_context,
+                ) from exc
+            except Exception as exc:
+                raise SoilGridsWcsError(
+                    _format_wcs_error_message(str(exc), request_context),
+                    raw=str(exc),
+                    request=request_context,
+                ) from exc
+
+            content_type = _normalize_content_type(
+                response.info().get("Content-Type", "")
+            )
+            body = response.read()
+
+            if "tiff" in content_type:
                 try:
                     with open(output, "wb") as file:
-                        file.write(response.read())
-
-                except Exception:
-                    print("Failed to save the data as a GeoTiff file.")
-                    raise
+                        file.write(body)
+                except Exception as exc:
+                    raise SoilGridsWcsError(
+                        _format_wcs_error_message(
+                            f"Failed to save the data as a GeoTiff file to {output!r}: {exc}",
+                            request_context,
+                        ),
+                        raw=str(exc),
+                        request=request_context,
+                    ) from exc
             else:
-                error_info = response.read().decode("utf-8")
-                raise Exception(f"WCS sever error \n{error_info}")
+                raw = body.decode("utf-8", errors="replace")
+                service_exception = _extract_ogc_service_exception(raw)
+                details = service_exception or raw
+                raise SoilGridsWcsError(
+                    _format_wcs_error_message(details, request_context),
+                    service_exception=service_exception,
+                    raw=raw,
+                    request=request_context,
+                )
 
         # open data
         dataset = rioxarray.open_rasterio(output)
@@ -286,3 +331,92 @@ class SoilGrids:
             coverage_obj = wcs.contents[coverage_id]
 
         return coverage_obj
+
+
+def _normalize_content_type(content_type: str) -> str:
+    return content_type.split(";", 1)[0].strip().lower() if content_type else ""
+
+
+def _extract_ogc_service_exception(xml_text: str) -> str | None:
+    try:
+        root = ET.fromstring(xml_text)
+    except Exception:
+        return None
+
+    for tag_suffix in ("ServiceException", "ExceptionText"):
+        for elem in root.iter():
+            if isinstance(elem.tag, str) and elem.tag.endswith(tag_suffix):
+                message = "\n".join(
+                    t.strip()
+                    for t in elem.itertext()
+                    if isinstance(t, str) and t.strip()
+                )
+                if message:
+                    return message
+    return None
+
+
+def _format_wcs_error_message(details: str, request_context: dict[str, object]) -> str:
+    west, south, east, north = request_context.get("bbox", (None, None, None, None))
+    resx = request_context.get("resx")
+    resy = request_context.get("resy")
+    width = request_context.get("width")
+    height = request_context.get("height")
+
+    est_width = None
+    est_height = None
+    if isinstance(width, (int, float)) and isinstance(height, (int, float)):
+        est_width = int(width)
+        est_height = int(height)
+    elif (
+        isinstance(west, (int, float))
+        and isinstance(east, (int, float))
+        and isinstance(south, (int, float))
+        and isinstance(north, (int, float))
+        and isinstance(resx, (int, float))
+        and isinstance(resy, (int, float))
+        and resx > 0
+        and resy > 0
+    ):
+        est_width = int(abs(east - west) / resx)
+        est_height = int(abs(north - south) / resy)
+
+    pixel_hint = ""
+    pixels = None
+    if est_width and est_height:
+        pixels = est_width * est_height
+        pixels_m = pixels / 1_000_000
+        pixel_hint = (
+            f" Estimated request size: {est_width}x{est_height} pixels"
+            f" ({pixels_m:.2f}M pixels)."
+        )
+
+    details_lower = details.lower() if details else ""
+    size_error_keywords = (
+        "memory",
+        "out of memory",
+        "too large",
+        "too big",
+        "size",
+        "exceed",
+        "exceeded",
+        "limit",
+        "maximum",
+    )
+    size_hint_pixel_threshold = 50_000_000
+    include_hint = any(k in details_lower for k in size_error_keywords) or (
+        isinstance(pixels, int) and pixels >= size_hint_pixel_threshold
+    )
+    hint = (
+        " Try reducing the bounding box, increasing resx/resy, or tiling the request."
+        if include_hint
+        else ""
+    )
+
+    return (
+        "WCS server error. "
+        f"{details.strip()}"
+        f"{pixel_hint}"
+        f"{hint}"
+        f" Request: {request_context!r}"
+    )
