@@ -1,0 +1,42 @@
+# This workflow uploads a Python package to PyPI using Trusted Publishers
+# Docs: https://docs.pypi.org/trusted-publishers/using-a-publisher/
+
+name: Upload Python Package
+
+on:
+  release:
+    types: [published]
+
+  # Allows manual trigger from Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    # 👇 required for PyPI Trusted Publishers
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install build tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+
+      - name: Build package
+        run: |
+          python -m build
+
+      # ✅ Publish to PyPI via Trusted Publisher (no secrets needed)
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
