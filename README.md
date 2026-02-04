@@ -2,6 +2,7 @@
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10368882.svg)](https://doi.org/10.5281/zenodo.10368882)
 [![Documentation Status](https://readthedocs.org/projects/soilgrids/badge/?version=latest)](https://soilgrids.readthedocs.io/en/latest/?badge=latest)
 [![MIT license](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/gantian127/soilgrids/blob/master/LICENSE.txt)
+[![PyPI Version](https://img.shields.io/pypi/v/soilgrids.svg)](https://pypi.org/project/soilgrids/)
 
 
 
